@@ -67,4 +67,4 @@ userSchema.methods.comparePassword=async function(password){
 
 const model= db.model('User',userSchema);
 
-module.exports=model;
+export default model;
