@@ -11,4 +11,4 @@ router.post('/login', userController.login);
 router.post('/upload-image', upload.single('image'), userController.uploadImage);
 router.get('/image-locations', userController.getAllImageLocationsAndSeverity); // New route
 
-module.exports = router;
+export default router;
