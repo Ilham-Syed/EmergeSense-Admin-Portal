@@ -1,0 +1,4 @@
+.env
+flask server/venv
+node_modules
+flask server/moondream_model
