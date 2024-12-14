@@ -21,7 +21,7 @@ export default function App() {
   const activeLayer = findMapLayer(MAP_LAYERS, mapState.selectedLayer);
 
   return (
-    <div className="h-screen w-screen overflow-hidden relative">
+    <div className="h-screen w-screen overflow-hidden relative z-0">
       <Sidebar
         isOpen={isSidebarOpen}
         onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
