@@ -1,5 +1,6 @@
-const { model } = require('mongoose');
-const UserService = require('../services/user_services');
+
+import { model } from 'mongoose';
+import UserService from '../services/user_services.js';
 
 exports.register = async (req, res, next) => {
     try {

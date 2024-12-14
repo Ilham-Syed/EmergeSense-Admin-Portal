@@ -1,10 +1,12 @@
-const express = require('express');
-const body_parser=require('body-parser');
-const userRoutes=require('./routes/user_routes');
+import express from 'express';
+import bodyParser from 'body-parser';
+import userRoutes from './routes/user_routes.js';
 
 const app = express();
 const port = 3000;
 
-app.use(body_parser.json());
-app.use('/',userRoutes);
-module.exports = app;
+app.use(bodyParser.json());
+app.use('/', userRoutes);
+// app.use('/admin', adminRouter);
+
+export default app;

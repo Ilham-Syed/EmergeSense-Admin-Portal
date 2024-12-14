@@ -1,8 +1,8 @@
-const userSchema = require('../model/user_model');
-const jwt = require('jsonwebtoken');
-const axios = require('axios');
-const fs = require('fs');
-const FormData = require('form-data');
+import userSchema from '../model/user_model.js';
+import jwt from 'jsonwebtoken';
+import axios from 'axios';
+import fs from 'fs';
+import FormData from 'form-data';
 
 
 class UserService {
