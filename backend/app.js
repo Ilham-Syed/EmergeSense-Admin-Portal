@@ -4,7 +4,7 @@ import adminRouter from './routes/admin_routes.js';
 import cors from 'cors';
 import proxyRouter from './proxy/index.js';
 
-
+ 
 const app = express();
 const port = 3000;
 
@@ -16,7 +16,7 @@ app.use(cors());
 app.use("/api/proxy", proxyRouter);
 
 //Routes
-app.use('/', userRoutes);
+app.use('/user', userRoutes);
 app.use('/admin', adminRouter);
 
 export default app;

@@ -1,10 +1,19 @@
+
 import dotenv from 'dotenv';
 import express from 'express';
 import ee from '@google/earthengine';
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
+import User from '../model/user_model.js';
 
-const privateKey = JSON.parse(fs.readFileSync(path.resolve('../privateKey.json'), 'utf8'));
+// Get the current file path and directory in ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Resolve the path to one level up from the current directory
+const privateKeyPath = path.resolve(__dirname, '../privateKey.json');
+const privateKey = JSON.parse(fs.readFileSync(privateKeyPath, 'utf-8'));
 let isEEInitialized = false;
 
 
@@ -27,9 +36,6 @@ const initializeEE = () => {
     });
 };
 
-
-
-initializeEE();
 
 
 export const checkGEEInitialized = (req, res, next) => {
@@ -95,3 +101,24 @@ export const fetchFloodMapping = async (req, res) => {
     }
 };
 
+
+
+export const fetchLocationMappings = async (req, res) => {
+    try {
+        // Retrieve users and extract their location data
+        const users = await User.find({}, 'uploads.location');
+        const locations = [];
+
+        users.forEach(user => {
+            user.uploads.forEach(upload => {
+                if (upload.location) {
+                    locations.push(upload.location);
+                }
+            });
+        });
+
+        res.json(locations); // Send all locations as a response
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
