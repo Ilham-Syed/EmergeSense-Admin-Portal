@@ -3,3 +3,4 @@ backend/flask server/venv
 backend/node_modules
 backend/flask server/moondream_model
 frontend/node_modules
+backend/privateKey.json
