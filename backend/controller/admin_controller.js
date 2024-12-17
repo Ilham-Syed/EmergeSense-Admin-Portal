@@ -106,13 +106,16 @@ export const fetchFloodMapping = async (req, res) => {
 export const fetchLocationMappings = async (req, res) => {
     try {
         // Retrieve users and extract their location data
-        const users = await User.find({}, 'uploads.location');
+        const users = await User.find({});
         const locations = [];
 
         users.forEach(user => {
             user.uploads.forEach(upload => {
                 if (upload.location) {
-                    locations.push(upload.location);
+                    locations.push({
+                        location: upload.location,
+                        severity: upload.severity
+                    });
                 }
             });
         });

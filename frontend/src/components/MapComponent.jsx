@@ -22,11 +22,11 @@ const MapComponent = ({ locationMappings }) => {
             <GoogleMap mapContainerClassName="w-full h-auto" center={center} zoom={15}>
                 {/* Render a Marker for each location in locationMappings */}
                 {locationMappings &&
-                    locationMappings.map((location, index) => (
+                    locationMappings.map((mapping, index) => (
                         <Marker
                             key={index}
-                            position={{ lat: location.latitude, lng: location.longitude }}
-                            onClick={() => setSelectedLocation(location)}
+                            position={{ lat: mapping.location.latitude, lng: mapping.location.longitude }}
+                            onClick={() => setSelectedLocation(mapping)}
                         />
                     ))}
 
@@ -38,15 +38,16 @@ const MapComponent = ({ locationMappings }) => {
                 {selectedLocation && (
                     <InfoWindow
                         position={{
-                            lat: selectedLocation.latitude || selectedLocation.lat,
-                            lng: selectedLocation.longitude || selectedLocation.lng,
+                            lat: selectedLocation.location.latitude,
+                            lng: selectedLocation.location.longitude,
                         }}
                         onCloseClick={() => setSelectedLocation(null)}
                     >
                         <div className="p-2">
                             <h3 className="text-lg font-bold mb-1">Location Info</h3>
-                            <p><strong>Latitude:</strong> {selectedLocation.latitude || selectedLocation.lat}</p>
-                            <p><strong>Longitude:</strong> {selectedLocation.longitude || selectedLocation.lng}</p>
+                            <p><strong>Latitude:</strong> {selectedLocation.location.latitude}</p>
+                            <p><strong>Longitude:</strong> {selectedLocation.location.longitude}</p>
+                            <p><strong>Severity:</strong> {selectedLocation.severity}</p>
                         </div>
                     </InfoWindow>
                 )}
