@@ -1,9 +1,15 @@
-import React from 'react'
+import MapComponent from './components/MapComponent';
+import SidebarComponent from './components/SidebarComponent';
 
 function App() {
   return (
-    <div>App</div>
-  )
+    <div className="App flex h-screens">
+
+      <SidebarComponent />
+      <MapComponent />
+
+    </div>
+  );
 }
 
 export default App;
