@@ -1,4 +1,5 @@
 import userSchema from '../model/user_model.js';
+import Volunteer from '../model/volunteer_model.js';
 import jwt from 'jsonwebtoken';
 import axios from 'axios';
 import fs from 'fs';
@@ -90,6 +91,34 @@ class UserService {
                 severity: upload.severity
             })));
             return data;
+        } catch (error) {
+            console.log('Error', error);
+            throw error;
+        }
+    }
+
+    static async createVolunteer(name, phoneNumber, age, district, state, country) {
+        try {
+            const volunteer = new Volunteer({
+                name,
+                phoneNumber,
+                age,
+                district,
+                state,
+                country
+            });
+            await volunteer.save();
+            return volunteer;
+        } catch (error) {
+            console.log('Error', error);
+            throw error;
+        }
+    }
+
+    static async countVolunteers() {
+        try {
+            const count = await Volunteer.countDocuments();
+            return count;
         } catch (error) {
             console.log('Error', error);
             throw error;

@@ -9,6 +9,8 @@ const upload = multer({ dest: 'uploads/' }); // Configure multer to store upload
 router.post('/register', userController.register);
 router.post('/login', userController.login);
 router.post('/upload-image', upload.single('image'), userController.uploadImage);
-router.get('/image-locations', userController.getAllImageLocationsAndSeverity); // New route
+router.get('/image-locations', userController.getAllImageLocationsAndSeverity); 
+router.post('/volunteer', userController.createVolunteer);
+router.get('/volunteer-count', userController.countVolunteers); 
 
 export default router;

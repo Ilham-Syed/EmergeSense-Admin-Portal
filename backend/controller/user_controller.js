@@ -81,6 +81,34 @@ const userController = {
             console.error(e);
             res.status(500).json({ message: 'Internal server error' });
         }
+    },
+
+    createVolunteer: async (req, res,next) => {
+        try{
+            const {name,phoneNumber,age,district,state,country}=req.body;
+            const volunteer=await UserService.createVolunteer(name,phoneNumber,age,district,state,country);
+            res.json({
+                success:true,
+                message:"Volunteer registered successfully",
+                data:volunteer
+            });
+        }catch(e){
+            console.error(e);
+            res.status(500).json({ message: 'Internal server error' });
+        }
+    },
+
+    countVolunteers: async (req, res) => {
+        try {
+            const count = await UserService.countVolunteers();
+            res.json({
+                success: true,
+                count: count
+            });
+        } catch (e) {
+            console.error(e);
+            res.status(500).json({ message: 'Internal server error' });
+        }
     }
 };
 
