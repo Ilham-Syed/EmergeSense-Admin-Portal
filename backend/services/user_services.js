@@ -125,6 +125,16 @@ class UserService {
         }
     }
 
+    static async fetchVolunteerData(){
+        try {
+            const volunteers= await Volunteer.find({});
+            return volunteers;
+        } catch (error) {
+            console.log("Error:",error);
+            throw error;
+        }
+    }
+
 }
 
 export default UserService;

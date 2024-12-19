@@ -109,6 +109,18 @@ const userController = {
             console.error(e);
             res.status(500).json({ message: 'Internal server error' });
         }
+    },
+
+    fetchVolunteerData: async(req,res)=>{
+        try{
+            const volunteers=await UserService.fetchVolunteerData();
+            res.json({
+                success:true,
+                data:volunteers});
+        }catch(error){
+            console.log("Error:",error);
+            res.status(500).json({ message: 'Internal server error' });
+        }
     }
 };
 
