@@ -70,6 +70,26 @@ const userController = {
         }
     },
 
+    uploadAudioTranscript: async (req, res) => {
+        try {
+            const token = req.headers['authorization']?.split(' ')[1]; // 'Bearer token' -> 'token'
+
+            if (!token) {
+                return res.status(400).json({ message: 'JWT token is required' });
+            }
+            const { text, latitude, longitude } = req.body;
+
+            const updatedUser = await UserService.uploadAudioTranscript(token, text, latitude, longitude);
+            res.json({
+                success: true,
+                message: "Audio transcript uploaded successfully",
+                data: updatedUser
+            });
+        } catch (e) {
+            throw e;
+        }
+    },
+
     getAllImageLocationsAndSeverity: async (req, res) => {
         try {
             const data = await UserService.getAllImageLocationsAndSeverity();

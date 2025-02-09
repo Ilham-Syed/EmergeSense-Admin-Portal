@@ -82,6 +82,31 @@ class UserService {
         }
     }
 
+    static async uploadAudioTranscript(token, text, latitude, longitude) {
+        try {
+            const decoded = jwt.verify(token, 'arip'); // Ensure JWT_SECRET is correctly set
+            const userId = decoded._id;
+            const user = await userSchema.findById(userId);
+            if (!user) {
+                throw new Error('User not found');
+            }
+
+            user.uploads.push({
+                type: 'audio',
+                transcript: text,
+                location: {
+                    latitude: latitude,
+                    longitude: longitude
+                }
+            });
+
+            await user.save();
+            return user;
+        } catch (error) {
+            console.log('Error', error);
+            throw error;
+        }
+    }
 
     static async getAllImageLocationsAndSeverity() {
         try {

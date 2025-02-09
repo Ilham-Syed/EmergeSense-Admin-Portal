@@ -18,18 +18,27 @@ llm = ChatGoogleGenerativeAI(
 )
 
 def get_disaster_prompt():
-    return "You are an expert in analyzing descriptions of natural disasters and predicting their severity based on the details provided.If the description is not that of a natural disaster just return Not a Natural Disaster"
+    return (
+        "You are an expert in disaster assessment. You will receive AI-generated descriptions of images depicting natural disasters. "
+        "Your task is to classify the disaster's severity based solely on the provided description. "
+        "Categorize the disaster as either **'severe disaster'** or **'moderate disaster'** based on the following criteria:\n\n"
+        "**Severe Disaster:** Involves large-scale destruction, significant infrastructure damage, numerous casualties, or catastrophic impact (e.g., major earthquakes, hurricanes, massive floods, widespread wildfires, or landslides burying towns).\n\n"
+        "**Moderate Disaster:** Involves localized damage, fewer casualties, and manageable destruction (e.g., minor floods, small-scale landslides, moderate storms, or controlled wildfires with limited spread).\n\n"
+        "If the description does not correspond to a natural disaster, return exactly: **'Not a Natural Disaster'**.\n"
+        "Do not provide explanations, probabilities, or any additional text—respond strictly with **'severe disaster'**, **'moderate disaster'**, or **'Not a Natural Disaster'**."
+    )
 
 def handle_gemini_call(description):
     system_message = get_disaster_prompt()
     
     messages = [
         ("system", system_message),
-        ("human", f"Based on the following description, predict the severity of the disaster in one single word- severe disaster, moderate disaster, less severe disaster. Return from only these 3 severity and no other explaination is needed: {description}"),
+        ("human", f"Classify the following AI-generated disaster description as either 'severe disaster' or 'moderate disaster': {description}"),
     ]
 
     ai_msg = llm.invoke(messages)
     return ai_msg.content
+
 
 app = Flask(__name__)
 

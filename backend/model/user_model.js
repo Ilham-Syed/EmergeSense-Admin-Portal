@@ -2,69 +2,84 @@ import mongoose from 'mongoose';
 import db from '../config/db.js';
 import bcrypt from 'bcrypt';
 
-const userSchema=new mongoose.Schema({
-    name:{
-        type:String,
-        required:true
+const uploadSchema = new mongoose.Schema({
+    type: {
+        type: String,
+        enum: ['image', 'audio'], // Defines whether the upload is an image or audio
+        required: true
     },
-    email:{
-        type:String,
-        required:true
+    filePath: {
+        type: String, // Path or URL of the uploaded file
+        required: function () { return this.type === 'image'; }
     },
-    password:{
-        type:String,
-        required:true
-    },
-    uploads: [
-        {
-            imagePath: {
-                type: String, // Path or URL of the uploaded image
-                required: false
-            },
-            location: {
-                latitude: {
-                    type: Number, // Latitude of the location
-                    required: false
-                },
-                longitude: {
-                    type: Number, // Longitude of the location
-                    required: false
-                },
-            },
-            uploadedAt: {
-                type: Date,
-                default: Date.now // Automatically stores the upload timestamp
-            },
-            imageDescription: {
-                type: String, // Description of the image
-                required: false
-            },
-            severity:{
-                type:String,
-                required:false
-            }
+    location: {
+        latitude: {
+            type: Number,
+            required: false
+        },
+        longitude: {
+            type: Number,
+            required: false
         }
-    ]
-})
-
-userSchema.pre('save',async function(){
-    try{
-        const salt=await bcrypt.genSalt(10);
-        const hashedPassword=await bcrypt.hash(this.password,salt);
-        this.password=hashedPassword;
-    }catch(e){
-        console.log('Error',e);
+    },
+    uploadedAt: {
+        type: Date,
+        default: Date.now // Automatically stores the upload timestamp
+    },
+    description: {
+        type: String, // For image description or extra notes
+        required: false
+    },
+    severity: {
+        type: String, // Only relevant for image uploads
+        required: function () { return this.type === 'image'; } // Required only if type is 'image'
+    },
+    transcript: {
+        type: String, // Stores transcribed text for audio uploads
+        required: function () { return this.type === 'audio'; } // Required only if type is 'audio'
     }
-})
+});
 
-userSchema.methods.comparePassword=async function(password){
-    try{
-        return await bcrypt.compare(password,this.password);
-    }catch(e){
-        console.log('Error',e);
+const userSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true
+    },
+    email: {
+        type: String,
+        required: true,
+        unique: true // Ensuring emails are unique
+    },
+    password: {
+        type: String,
+        required: true
+    },
+    uploads: [uploadSchema] // Embedding the uploadSchema for storing uploads
+});
+
+// Hash password before saving user
+userSchema.pre('save', async function (next) {
+    if (!this.isModified('password')) return next(); // Only hash password if it's modified
+    try {
+        const salt = await bcrypt.genSalt(10);
+        this.password = await bcrypt.hash(this.password, salt);
+        next();
+    } catch (error) {
+        console.log('Error hashing password:', error);
+        next(error);
     }
-}
+});
 
-const model= db.model('User',userSchema);
+// Compare passwords
+userSchema.methods.comparePassword = async function (password) {
+    try {
+        return await bcrypt.compare(password, this.password);
+    } catch (error) {
+        console.log('Error comparing password:', error);
+        return false;
+    }
+};
 
-export default model;
+const User = db.model('User', userSchema);
+
+export default User;
